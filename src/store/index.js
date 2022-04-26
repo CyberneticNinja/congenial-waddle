@@ -5,9 +5,6 @@ import Cookies from "js-cookie";
 
 const http = axios.create({
   headers: {
-    // "X-Requested-With": "XMLHttpRequest",
-    // Accept: "application/json",
-    // "Content-Type": "application/json",
     alg: "HS256",
     typ: "JWT",
   },
@@ -19,7 +16,7 @@ const http = axios.create({
 export default createStore({
   state: {
     recordCount:null,
-    users: [],
+    records: [],
     errors: null,
     token:null,
     isUserLoggedIn:false
@@ -27,7 +24,7 @@ export default createStore({
   getters: {
     getRecordCount: (state) => state.recordCount,
     getErrors: (state) => state.errors,
-    getUsers: (state) => state.users,
+    getRecord: (state) => state.records,
     getToken: (state) => state.token,
     getisUserLoggedIn: (state) => state.isUserLoggedIn
   },
@@ -41,11 +38,9 @@ export default createStore({
             }
           }
         );
-        console.log('record count '+data.data)
         commit("SET_RECORD_COUNT", data.data)
       } catch (error) {
         // alert(error);
-        console.log(error);
       }
     },
     async initialFetchRecords({ commit },credentials) {
@@ -55,7 +50,6 @@ export default createStore({
 
       if(typeof Cookies.get('userdata') !== 'undefined')
       {
-console.log('we are on line 58')
         let parsedData = Cookies.get('userdata')
         parsedData = JSON.parse(parsedData)
         if(parsedData['page'] !== null)  {
@@ -71,11 +65,9 @@ console.log('we are on line 58')
             }
           }
         );
-        console.log(data.data)
-        commit("SET_USERS", data.data)
+        commit("SET_RECORD", data.data)
       } catch (error) {
         // alert(error);
-        console.log(error);
       }
     },
     async fetchUsers({ commit },credentials) {
@@ -87,9 +79,8 @@ console.log('we are on line 58')
             }
           }
         );
-        console.log(data.data)
 
-        commit("SET_USERS", data.data)
+        commit("SET_RECORD", data.data)
 
         let parsedData = Cookies.get('userdata')
 
@@ -99,23 +90,17 @@ console.log('we are on line 58')
         //expiration
         let expires = parsedData["expires"]
         expires = new Date(new Date().getTime() + 15 * 60000)
-        console.log('expiration data '+expires)
 
         parsedData["itemsperpage"] = credentials.itemsperpage
         parsedData["page"] = credentials.page
-
-        // console.log('-------------fetchUsers starts-------------')
-        // console.log(parsedData)
-        // console.log('-------------fetchUsers ends-------------')
 
         parsedData = JSON.stringify(parsedData)
         //cookie saved with new data
         Cookies.set('userdata',JSON.stringify({ email:parsedData["email"], expires:expires, page:credentials.page, itemsperpage:credentials.itemsperpage}),{
         })
-        // console.log(parsedData)
+
       } catch (error) {
         // alert(error);
-        // console.log(error);
       }
     },
     async login({commit}, credentials) {
@@ -126,7 +111,6 @@ console.log('we are on line 58')
         });
         //No errors
         commit("SET_ERRORS", null);
-        // console.log(data.data);
 
         var inSixtyMinutes = new Date(new Date().getTime() + 60 * 60 * 1000)
         var inFifthenMinutes =  new Date(new Date().getTime() + 15 * 60000)
@@ -136,10 +120,6 @@ console.log('we are on line 58')
         Cookies.set('token',data.data,{
           expires:inFifthenMinutes
         })
-        // Cookies.set('email',credentials.email,{
-        //   expires:inFifthenMinutes
-        // })
-
         var userdata = { email:credentials.email, expires:inFifthenMinutes, page:null, itemsperpage:null}
 
         Cookies.set('userdata',JSON.stringify(userdata),{
@@ -148,7 +128,6 @@ console.log('we are on line 58')
 
         var parsedData = Cookies.get('userdata')
         console.log(parsedData)
-//this.$emit('successfullogin',true)
         commit('SET_TOKEN',data.data)
 if(Cookies.get('token'))
 {
@@ -158,14 +137,11 @@ else
 {
   commit('SET_IS_USER_LOGGED_IN',false)
 }
-// console.log('we are here')      
       } catch (error) {
         if(error.response)
         {
           commit("SET_ERRORS", error.response.data);
-                  // commit("SET_ERRORS", error.response.data);
         // alert(error);
-        console.log(error);
         }
       }
     },
@@ -174,8 +150,8 @@ else
     SET_RECORD_COUNT(state, recordCount) {
       state.recordCount = recordCount;
     },
-    SET_USERS(state, users) {
-      state.users = users;
+    SET_RECORD(state, records) {
+      state.records = records;
     },
     SET_ERRORS(state, errors) {
       state.errors = errors;

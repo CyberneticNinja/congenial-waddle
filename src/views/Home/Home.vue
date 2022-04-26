@@ -58,7 +58,7 @@ export default {
     },
     computed: {
         records() {
-            return this.$store.getters.getUsers 
+            return this.$store.getters.getRecord 
         },
         recordCount() {
             return this.$store.getters.getRecordCount
@@ -68,7 +68,6 @@ export default {
         //intial value
         let page = 1
         let itemsperpage = 1
-        console.log(Cookies.get('userdata'))
 
         // //cookie exists
         if(typeof Cookies.get('userdata') !== 'undefined')
@@ -81,7 +80,6 @@ export default {
 
             if(parsedData['page'] == null)
             {
-                console.log('we are in mounted if(parsedData[page] == null)')
                 this.$store.dispatch("initialFetchRecords",{
                     page:1,
                     itemsperpage:10
@@ -89,7 +87,6 @@ export default {
             }
             else
             {
-                console.log('we are in mounted else')
                 this.currentpage = parsedData["page"]
                 this.$store.dispatch("initialFetchRecords",{
                     page:parsedData["page"] ,
