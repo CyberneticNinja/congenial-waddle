@@ -47,7 +47,6 @@ export default {
     return {
       email: "",
       password: "",
-      token:null
     };
   },
   methods: {
@@ -84,9 +83,6 @@ export default {
     errors() {
       return this.$store.getters.getErrors
     }
-  },
-  mounted () {
-    this.token = this.$store.getters.getToken;
   },
 };
 </script>

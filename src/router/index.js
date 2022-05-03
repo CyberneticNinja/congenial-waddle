@@ -28,51 +28,32 @@ const router = createRouter({
 })
 
 router.beforeEach((to,from,next)=>{
-
-    if(to.name == 'login' && typeof Cookies.get('token') === 'undefined')
+    //no cookie, user has not logged in
+    if(typeof Cookies.get('token') === 'undefined')
     {
-        next();
+        if(to.name !== 'login')
+        {
+            //redirect to login
+            next({
+                path:'/login',
+                replace:true
+            })            
+        }
+        else 
+        {
+            next();
+        }
     }
-    else if(to.name == 'login' && typeof Cookies.get('token') !== 'undefined')
-    {
-        next({
-            path:'/',
-            replace:true
-        })
-    }
-    //user is already logged out, need to login
-    else if(to.name !== 'login' && typeof Cookies.get('token') === 'undefined')
-    {
-        console.log(to.name+' '+Cookies.get('token'))
-        next({
-            path:'/login',
-            replace:true
-        })
-    }
-    // else if(to.name == 'logout' && typeof Cookies.get('token') !== 'undefined')
-    // {
-    //     console.log(Cookies.get('token'))
-    //     next({
-    //         path:'/',
-    //         replace:true
-    //     })
-    // }
+    //cookie is found, user is logged in
     else
     {
-        next();
+        if(to.name == 'home' || to.name == 'logout')
+        {
+            {
+                next();
+            }         
+        }
     }
-
-    // if(to.name !== 'login' && Cookies.get('token') == null)
-    // {
-    //     next({
-    //         path:'login',
-    //         replace:true
-    //     })
-    // }
-    // else
-    // {
-    //     next();
-    // }
 })
 
 export default router

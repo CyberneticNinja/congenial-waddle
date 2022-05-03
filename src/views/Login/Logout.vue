@@ -11,7 +11,6 @@
         mounted () {
             Cookies.remove('token');
             Cookies.remove('userdata');
-            // Cookies.remove('expires');
         },
     }
 </script>

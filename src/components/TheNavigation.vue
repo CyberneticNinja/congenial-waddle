@@ -46,7 +46,6 @@ export default {
       {
         return true;
       }
-      // return this.$store.getters.getisUserLoggedIn
     }
   },
 };

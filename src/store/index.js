@@ -18,15 +18,11 @@ export default createStore({
     recordCount:null,
     records: [],
     errors: null,
-    token:null,
-    isUserLoggedIn:false
   },
   getters: {
     getRecordCount: (state) => state.recordCount,
     getErrors: (state) => state.errors,
     getRecord: (state) => state.records,
-    getToken: (state) => state.token,
-    getisUserLoggedIn: (state) => state.isUserLoggedIn
   },
   actions: {
     async fetchRecordCount({ commit }) {
@@ -112,31 +108,21 @@ export default createStore({
         //No errors
         commit("SET_ERRORS", null);
 
-        var inSixtyMinutes = new Date(new Date().getTime() + 60 * 60 * 1000)
-        var inFifthenMinutes =  new Date(new Date().getTime() + 15 * 60000)
-        var inFiveMinutes =  new Date(new Date().getTime() + 5 * 60000)
+        let inSixtyMinutes = new Date(new Date().getTime() + 60 * 60 * 1000)
+        let inFifthenMinutes =  new Date(new Date().getTime() + 15 * 60000)
+        let inFiveMinutes =  new Date(new Date().getTime() + 5 * 60000)
 
         //setting cookies
         Cookies.set('token',data.data,{
           expires:inFifthenMinutes
         })
-        var userdata = { email:credentials.email, expires:inFifthenMinutes, page:null, itemsperpage:null}
+        let userdata = { email:credentials.email, expires:inFifthenMinutes, page:null, itemsperpage:null}
 
-        Cookies.set('userdata',JSON.stringify(userdata),{
-          expires:inFifthenMinutes
-        })
+        Cookies.set('userdata',JSON.stringify(userdata))
 
-        var parsedData = Cookies.get('userdata')
+        let parsedData = Cookies.get('userdata')
         console.log(parsedData)
-        commit('SET_TOKEN',data.data)
-if(Cookies.get('token'))
-{
-  commit('SET_IS_USER_LOGGED_IN',true)
-}
-else
-{
-  commit('SET_IS_USER_LOGGED_IN',false)
-}
+
       } catch (error) {
         if(error.response)
         {
@@ -155,12 +141,6 @@ else
     },
     SET_ERRORS(state, errors) {
       state.errors = errors;
-    },
-    SET_TOKEN(state, token) {
-      state.token = token;
-    },
-    SET_IS_USER_LOGGED_IN(state, status) {
-      state.isUserLoggedIn = status;
-    },
+    }
   },
 });

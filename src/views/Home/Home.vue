@@ -20,15 +20,12 @@ export default {
             currentpage: 1,
             itemsperpage: 10,
             nextshow:true,
-            records:null
         }
     },
     methods: {
         next() {
             let limit = 0
             limit = Math.ceil(this.$store.getters.getRecordCount/this.itemsperpage)
-            console.log(limit)
-            limit = 10
             
             if(this.currentpage+1 <= limit)
             {
@@ -67,7 +64,7 @@ export default {
     mounted () {
         //intial value
         let page = 1
-        let itemsperpage = 1
+        let itemsperpage = 10
 
         // //cookie exists
         if(typeof Cookies.get('userdata') !== 'undefined')
@@ -79,10 +76,10 @@ export default {
             parsedData = JSON.parse(parsedData)
 
             if(parsedData['page'] == null)
-            {
+            {               
                 this.$store.dispatch("initialFetchRecords",{
-                    page:1,
-                    itemsperpage:10
+                    page:page,
+                    itemsperpage:itemsperpage
                 })
             }
             else
@@ -92,7 +89,6 @@ export default {
                     page:parsedData["page"] ,
                     itemsperpage:parsedData["itemsperpage"] 
                 })
-                // this.$store.dispatch("fetchRecordCount")   
                 this.currentpage = parsedData['page']
             }       
         }
